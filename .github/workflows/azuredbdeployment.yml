@@ -1,0 +1,20 @@
+name: Azure Database Deployment
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Azure SQL Deploy
+        uses: Azure/sql-action@v2.2.1
+        with:
+          connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+          path: './HelloSqlProject.sqlproj'
+          action: 'publish'
+          build-arguments: '/p:DropObjectsNotInSource=true'
+          
